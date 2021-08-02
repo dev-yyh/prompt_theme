@@ -14,7 +14,7 @@ function f_git_branch() {
 }
 
 function f_time() {
-  str=" `date "+%k:%M:%S"` "
+  str=" `date "+%H:%M:%S"` "
   length=${#str}
   echo -e "$str${TIME_ICON} "
   let length+=2
