@@ -1,17 +1,20 @@
 #!/bin/sh
 
 function make_left_prompt() {
+  RETVAL=$1
+
   for idx in ${!left_prompt_elements[*]}
   do
 # get a string of an element    
-    element="$(${left_prompt_elements[idx]})"
+    f_color="${left_prompt_segment_foreground_colors[idx]}"
+    element="$(${left_prompt_elements[idx]} $f_color $RETVAL)"
     let length+=$?
 
 # add color to an element
     e_color="\e[0m"
-    f_color="\e[38;5;${left_prompt_segment_foreground_colors[idx]}m"
+#    f_color="\e[38;5;${left_prompt_segment_foreground_colors[idx]}m"
     b_color="\e[48;5;${left_prompt_segment_background_colors[idx]}m"
-    str+="${f_color}${b_color}$element${e_color}"
+    str+="${b_color}$element${e_color}"
 
 # add end_symbol to a string
     let last_idx=${#left_prompt_elements[*]}-1
@@ -33,11 +36,13 @@ function make_left_prompt() {
 }
 
 function make_right_prompt() {
+  RETVAL=$1
 
   for idx in ${!right_prompt_elements[*]}
   do
-# get a string of an element    
-    element="$(${right_prompt_elements[idx]})"
+# get a string of an element
+    f_color="${right_prompt_segment_foreground_colors[idx]}"
+    element="$(${right_prompt_elements[idx]} ${f_color} $RETVAL)"
     let length+=$?
 
 # add start_symbol to a string
@@ -54,9 +59,9 @@ function make_right_prompt() {
 
 # add color to an element
     e_color="\e[0m"
-    f_color="\e[38;5;${right_prompt_segment_foreground_colors[idx]}m"
+ #   f_color="\e[38;5;${right_prompt_segment_foreground_colors[idx]}m"
     b_color="\e[48;5;${right_prompt_segment_background_colors[idx]}m"
-    str+="${f_color}${b_color}$element${e_color}"
+    str+="${b_color}$element${e_color}"
   done
 
   echo -e "$str"
@@ -82,9 +87,9 @@ function make_mid_prompt() {
 }
 
 function make_line1_prompt() {
-  l_str="$(make_left_prompt)"
+  l_str="$(make_left_prompt $1)"
   l_length=$?
-  r_str="$(make_right_prompt)"
+  r_str="$(make_right_prompt $1)"
   r_length=$?
  
   width=$(tput cols)
@@ -114,9 +119,9 @@ function make_line2_prompt() {
 }
 
 function build_prompt() {
-
-  line1="$(make_line1_prompt)"  
-  line2="$(make_line2_prompt)"
+  RETVAL=$?
+  line1="$(make_line1_prompt $RETVAL)"  
+  line2="$(make_line2_prompt $RETVAL)"
 
   echo -e "${line1}"
   echo -e "${line2}"
