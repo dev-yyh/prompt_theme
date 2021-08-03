@@ -10,9 +10,8 @@ function make_left_prompt() {
     element="$(${left_prompt_elements[idx]} $f_color $RETVAL)"
     let length+=$?
 
-# add color to an element
+# add background color to an element
     e_color="\e[0m"
-#    f_color="\e[38;5;${left_prompt_segment_foreground_colors[idx]}m"
     b_color="\e[48;5;${left_prompt_segment_background_colors[idx]}m"
     str+="${b_color}$element${e_color}"
 
@@ -57,9 +56,8 @@ function make_right_prompt() {
       let length+=1
     fi
 
-# add color to an element
+# add background color to an element
     e_color="\e[0m"
- #   f_color="\e[38;5;${right_prompt_segment_foreground_colors[idx]}m"
     b_color="\e[48;5;${right_prompt_segment_background_colors[idx]}m"
     str+="${b_color}$element${e_color}"
   done
