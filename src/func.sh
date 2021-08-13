@@ -1,13 +1,13 @@
 #!/bin/sh
 
-function make_left_prompt() {
+function _make_left_prompt() {
   RETVAL=$1
 
   for idx in ${!left_prompt_elements[*]}
   do
 # get a string of an element    
     f_color="${left_prompt_segment_foreground_colors[idx]}"
-    element="$(${left_prompt_elements[idx]} $f_color $RETVAL)"
+    element="$(_${left_prompt_elements[idx]} $f_color $RETVAL)"
     let length+=$?
 
 # add background color to an element
@@ -34,14 +34,14 @@ function make_left_prompt() {
   return $length
 }
 
-function make_right_prompt() {
+function _make_right_prompt() {
   RETVAL=$1
 
   for idx in ${!right_prompt_elements[*]}
   do
 # get a string of an element
     f_color="${right_prompt_segment_foreground_colors[idx]}"
-    element="$(${right_prompt_elements[idx]} ${f_color} $RETVAL)"
+    element="$(_${right_prompt_elements[idx]} ${f_color} $RETVAL)"
     let length+=$?
 
 # add start_symbol to a string
@@ -67,7 +67,7 @@ function make_right_prompt() {
   return $length
 }
 
-function make_mid_prompt() {
+function _make_mid_prompt() {
   
 # get a mid_prompt_symbol
   mid_length=$1
@@ -84,43 +84,45 @@ function make_mid_prompt() {
   echo -e "$str"
 }
 
-function make_line1_prompt() {
-  l_str="$(make_left_prompt $1)"
+function _make_line1_prompt() {
+  l_str="$(_make_left_prompt $1)"
   l_length=$?
-  r_str="$(make_right_prompt $1)"
+  r_str="$(_make_right_prompt $1)"
   r_length=$?
  
   width=$(tput cols)
   let "mid_length=$width - $l_length - $r_length"
   
   if [ $mid_length -lt 0 ]; then
-    l_str=$(f_pwd)
+    l_str=$(_f_pwd)
     str="${l_str}"
   else
-    mid_str="$(make_mid_prompt $mid_length)"
+    mid_str="$(_make_mid_prompt $mid_length)"
     str="${l_str}${mid_str}${r_str}"
   fi
 
   echo -e "$str"
 }
 
-function make_line2_prompt() {
+function _make_line2_prompt() {
 # get a prompt_symbol  
   element="${PROMPT_SYMBOL}"
 
 # add color to an element
-  e_color="\e[0m"
-  f_color="\e[38;5;${prompt_color}m"
+  f_color='\[\e[38;5;'"${prompt_color}"'m\]'
+  e_color='\[\e[0m\]'
+
   str="${f_color}$element${e_color}"
 
-  echo -e "$str "
+  echo -e "$str"
 }
 
-function build_prompt() {
+function _build_prompt() {
   RETVAL=$?
-  line1="$(make_line1_prompt $RETVAL)"  
-  line2="$(make_line2_prompt $RETVAL)"
+
+  line1="$(_make_line1_prompt $RETVAL)"
+  line2="$(_make_line2_prompt $RETVAL)"
 
   echo -e "${line1}"
-  echo -e "${line2}"
+  echo -e "${line2} "
 }
