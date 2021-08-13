@@ -1,6 +1,6 @@
 #!/bin/sh
 
-function f_git_branch() {
+function _f_git_branch() {
 # get a string
   str="$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ \1/ ')"
   length=${#str}
@@ -19,7 +19,7 @@ function f_git_branch() {
   return $length
 }
 
-function f_time() {
+function _f_time() {
 # get a string
   str=" `date "+%H:%M:%S"` "
   length=${#str}
@@ -34,7 +34,7 @@ function f_time() {
   return $length
 }
 
-function f_pwd() {
+function _f_pwd() {
 # get a string
   str=" $(pwd | sed "s/$(echo $HOME| sed 's/\//\\\//g')/\~/") " # $HOME -> ~
   length=${#str}
@@ -48,7 +48,7 @@ function f_pwd() {
   return $length  
 }
 
-function f_context() {
+function _f_context() {
 # get a string
   str=" $USER@$HOSTNAME "
   length=${#str}
@@ -63,7 +63,7 @@ function f_context() {
   return $length
 }
 
-function f_status() {
+function _f_status() {
   color=$1
   RETVAL=$2
   
