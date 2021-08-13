@@ -85,9 +85,10 @@ function _make_mid_prompt() {
 }
 
 function _make_line1_prompt() {
-  l_str="$(_make_left_prompt $1)"
+  EXIT_CODE=$?
+  l_str="$(_make_left_prompt $EXIT_CODE)"
   l_length=$?
-  r_str="$(_make_right_prompt $1)"
+  r_str="$(_make_right_prompt $EXIT_CODE)"
   r_length=$?
  
   width=$(tput cols)
@@ -114,15 +115,5 @@ function _make_line2_prompt() {
 
   str="${f_color}$element${e_color}"
 
-  echo -e "$str"
-}
-
-function _build_prompt() {
-  RETVAL=$?
-
-  line1="$(_make_line1_prompt $RETVAL)"
-  line2="$(_make_line2_prompt $RETVAL)"
-
-  echo -e "${line1}"
-  echo -e "${line2} "
+  echo -e "\n$str"
 }
