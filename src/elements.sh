@@ -83,3 +83,8 @@ function _f_status() {
 
   return $length
 }
+
+function _enable_transient_prompt() {
+  export PROMPT_COMMAND=""
+  trap 'tput cuu 2; tput el;echo -e "\e[38;5;2m$PROMPT_SYMBOL\e[0m" $BASH_COMMAND;tput ed' DEBUG
+}
